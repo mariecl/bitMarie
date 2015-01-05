@@ -8,7 +8,7 @@ var express = require('express'),
 	regexp = require('node-regexp'),
 	request = require('request'),
 	url = require('url'),
-	link = url.parse(config.link),
+	
 	command_arguments, file, data, reURL, rePath;
 
 /*
@@ -51,7 +51,7 @@ switch (command_arguments[0]) {
 						// get torrent file as a buffer
 						file = request({
 							method: "GET",
-							url: link,
+							url: command_arguments[1],
 							encoding: null // If null, the body is returned as a Buffer.
 						}, function (error, response, body) {
 							if (error || response.statusCode !== 200) {

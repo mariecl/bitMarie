@@ -1,6 +1,10 @@
 'use strict';
 
-var reURL, rePath, downloader;
+var bencode = require('bencode'),
+	fs = require('fs'),
+	regexp = require('node-regexp'),
+	request = require('request'),
+	reURL, rePath, downloader;
 
 /*
 * Regular expression for URL
@@ -58,12 +62,12 @@ downloader = function (argument) {
 	}
 };
 
-function downloadFromURL (argumentURL) = {
-	console.log("Started downloading from URL " + argument);
+function downloadFromURL (argumentURL) {
+	console.log("Started downloading from URL " + argumentURL);
 	// get torrent file as a buffer
-	file = request({
+	var file = request({
 		method: "GET",
-		url: argument,
+		url: argumentURL,
 		encoding: null // If null, the body is returned as a Buffer.
 	}, function (error, response, body) {
 		if (error || response.statusCode !== 200) {
@@ -76,11 +80,11 @@ function downloadFromURL (argumentURL) = {
 	})
 }
 
-function downloadFromPath (argumentPath) = {
-	console.log("Started downloading from local file " + argument);
+function downloadFromPath (argumentPath) {
+	console.log("Started downloading from local file " + argumentPath);
 
 	var returnFile = function (callback) {
-	  fs.readFile(argument, function (err, data) {
+	  fs.readFile(argumentPath, function (err, data) {
 	    callback(data);
 	  });
 	}

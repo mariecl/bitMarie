@@ -4,6 +4,7 @@ var bencode = require('bencode'),
 	fs = require('fs'),
 	regexp = require('node-regexp'),
 	request = require('request'),
+	trackerConnection = require('./trackerConnection'),
 	reURL, rePath, downloader;
 
 /*
@@ -75,7 +76,7 @@ function downloadFromURL (argumentURL) {
 			return;
 		} else {
 			//decode the bencoded buffer
-			return bencode.decode(body, 'utf8');
+			return trackerConnection(bencode.decode(body, 'utf8'));
 		}
 	})
 }
@@ -90,7 +91,7 @@ function downloadFromPath (argumentPath) {
 	}
 
 	var decode = function (dataBuffer) {
-		return bencode.decode(dataBuffer, 'utf8');
+		return trackerConnection(bencode.decode(dataBuffer, 'utf8'));
 	}
 
 	returnFile(decode);

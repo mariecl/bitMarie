@@ -1,10 +1,8 @@
 'use strict';
 
 var config = require('./config'),
-	url = require('url'),
-	downloader = require('./downloader'),
-	series = require('./series'),
-	command_arguments, file, data;
+	downloader = require('./lib/downloader'),
+	command_arguments;
 
 /*
 * Parse string from command line

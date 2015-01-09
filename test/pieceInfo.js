@@ -1,9 +1,11 @@
-	var assert = require('chai').assert,
-	expect = require('chai').expect,
+var fs = require('fs'),
+	chai = require('chai'),
+	assert = chai.assert,
+	expect = chai.expect,
 	request = require('request'),
 	appConfig = require('../config'),
-	pieceInfo = require('../pieceInfo'),
-	decodedTorrentFile, piece;
+	pieceInfo = require('../lib/pieceInfo'),
+	decodedTorrentFile, piece, path;
 
 decodedTorrentFile = { 
 	announce: 'http://bt1.archive.org:6969/announce',
@@ -175,11 +177,36 @@ decodedTorrentFile = {
 	]
 }
 
-//assert.strictEqual(pieceInfo(decodedTorrentFile), {downloaded: 0, uploaded: 0, left: 2153880});
-piece = pieceInfo(decodedTorrentFile);
-assert.strictEqual(piece.downloaded, 0, "First contact to torrent: file should not have been downloaded");
-assert.strictEqual(piece.uploaded, 0, "Uploading not implemented");
-assert.strictEqual(piece.left, 2153880, "First contact to torrent: everything has yet to be downloaded");
+describe('pieceInfo', function(){
+	//TO DO: before (not beforeEach) -> check that the torrent folder doesn't already exist
 
-//TODO: test for folder creation
-//TODO: delete folder after test suite.
+	beforeEach(function(){
+		piece = pieceInfo(decodedTorrentFile);
+		path = appConfig.download_path + decodedTorrentFile.title;
+	});
+
+	//TO DO: after (not afterEach) -> delete folder after test suite
+	
+	describe('#pieceInfo()', function(){
+		it('should call initPieceInfo() when it is the first contact to the torrent', function() {
+			assert.strictEqual(piece.downloaded, 0, "First contact to torrent: file should not have been downloaded");
+			assert.strictEqual(piece.uploaded, 0, "Uploading not implemented");
+			assert.strictEqual(piece.left, 2153880, "First contact to torrent: everything has yet to be downloaded");
+			path = appConfig.download_path + decodedTorrentFile.title;
+			assert.strictEqual(fs.existsSync(path), true, "Should result in creating a specific download folder");
+		})
+
+		it('should create a folder for the new torrent file', function() {
+			assert.strictEqual(fs.existsSync(path), true, "Should result in creating a specific download folder");
+		})
+
+		it('should return the current state when it is not the first contact to the torrent', function() {
+			assert.strictEqual(piece.downloaded, 1, "First contact to torrent: file should not have been downloaded");
+			assert.strictEqual(piece.uploaded, 0, "Uploading not implemented");
+			assert.strictEqual(piece.left, 99, "First contact to torrent: everything has yet to be downloaded");
+		})
+	})
+});
+
+
+

@@ -1,8 +1,6 @@
 'use strict';
 
-var express = require('express'),
-	app = express(),
-	config = require('./config'),
+var config = require('./config'),
 	url = require('url'),
 	downloader = require('./downloader'),
 	series = require('./series'),

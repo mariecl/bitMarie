@@ -29,3 +29,6 @@ node_modules
 
 # Torrent files for testing
 .torrent
+
+# Downloaded files for testing
+/Downloads

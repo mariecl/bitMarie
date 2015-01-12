@@ -177,6 +177,24 @@ decodedTorrentFile = {
 	]
 }
 
+/*
+* Removes a folder that is not empty
+* From: http://www.geedew.com/2012/10/24/remove-a-directory-that-is-not-empty-in-nodejs/
+*/
+var deleteFolderRecursive = function (path) {
+	if( fs.existsSync(path) ) {
+    	fs.readdirSync(path).forEach(function(file,index){
+			var curPath = path + "/" + file;
+			if(fs.lstatSync(curPath).isDirectory()) { // recurse
+				deleteFolderRecursive(curPath);
+			} else { // delete file
+				fs.unlinkSync(curPath);
+			}
+		});
+	fs.rmdirSync(path);
+	}
+};
+
 describe('pieceInfo', function(){
 	//TO DO: before (not beforeEach) -> check that the torrent folder doesn't already exist
 
@@ -185,14 +203,15 @@ describe('pieceInfo', function(){
 		path = appConfig.download_path + decodedTorrentFile.title;
 	});
 
-	//TO DO: after (not afterEach) -> delete folder after test suite
+	after(function() {
+		deleteFolderRecursive(path);
+	})
 	
 	describe('#pieceInfo()', function(){
 		it('should call initPieceInfo() when it is the first contact to the torrent', function() {
 			assert.strictEqual(piece.downloaded, 0, "First contact to torrent: file should not have been downloaded");
 			assert.strictEqual(piece.uploaded, 0, "Uploading not implemented");
 			assert.strictEqual(piece.left, 2153880, "First contact to torrent: everything has yet to be downloaded");
-			path = appConfig.download_path + decodedTorrentFile.title;
 			assert.strictEqual(fs.existsSync(path), true, "Should result in creating a specific download folder");
 		})
 

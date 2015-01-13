@@ -2,10 +2,11 @@ var fs = require('fs'),
 	chai = require('chai'),
 	assert = chai.assert,
 	expect = chai.expect,
+	fs_extra = require('fs-extra'),
 	request = require('request'),
 	appConfig = require('../config'),
-	pieceInfo = require('../lib/pieceInfo'),
-	decodedTorrentFile, piece, path;
+	PieceInfo = require('../lib/pieceInfo'),
+	decodedTorrentFile, piece, path, err;
 
 decodedTorrentFile = { 
 	announce: 'http://bt1.archive.org:6969/announce',
@@ -175,56 +176,81 @@ decodedTorrentFile = {
 	    'http://ia600600.us.archive.org/9/items/',
 	    'http://ia700600.us.archive.org/9/items/'
 	]
-}
-
-/*
-* Removes a folder that is not empty
-* From: http://www.geedew.com/2012/10/24/remove-a-directory-that-is-not-empty-in-nodejs/
-*/
-var deleteFolderRecursive = function (path) {
-	if( fs.existsSync(path) ) {
-    	fs.readdirSync(path).forEach(function(file,index){
-			var curPath = path + "/" + file;
-			if(fs.lstatSync(curPath).isDirectory()) { // recurse
-				deleteFolderRecursive(curPath);
-			} else { // delete file
-				fs.unlinkSync(curPath);
-			}
-		});
-	fs.rmdirSync(path);
-	}
 };
 
 describe('pieceInfo', function(){
-	//TO DO: before (not beforeEach) -> check that the torrent folder doesn't already exist
+	before (function() {
+		path = appConfig.download_path + decodedTorrentFile.title;
+		if (fs.existsSync(path)) {
+			fs_extra.removeSync(path);
+		}
+	});
 
 	beforeEach(function(){
-		piece = pieceInfo(decodedTorrentFile);
+		piece = new PieceInfo (decodedTorrentFile);
+	});
+
+	after(function() {
+		fs_extra.removeSync(path);
+	});
+	
+	describe('#pieceInfo()', function(){
+		it('should call initPieceInfo() when it is the first contact to the torrent', function() {
+			assert.strictEqual(piece.state.downloaded, 0, "First contact to torrent: file should not have been downloaded");
+			assert.strictEqual(piece.state.uploaded, 0, "Uploading not implemented");
+			assert.strictEqual(piece.state.left, 2153880, "First contact to torrent: everything has yet to be downloaded");
+			assert.strictEqual(fs.existsSync(piece.path), true, "Should result in creating a specific download folder");
+		});
+
+		it('should create a folder for the new torrent file', function() {
+			assert.strictEqual(fs.existsSync(piece.path), true, "Should result in creating a specific download folder");
+		});
+
+		it('should return the current state when it is not the first contact to the torrent', function() {
+			assert.strictEqual(piece.state.downloaded, 1, "First contact to torrent: file should not have been downloaded");
+			assert.strictEqual(piece.state.uploaded, 0, "Uploading not implemented");
+			assert.strictEqual(piece.state.left, 99, "First contact to torrent: everything has yet to be downloaded");
+		});
+	});
+});
+
+describe('initPieceInfo - error', function() {
+	before(function () {
+		decodedTorrentFile = { 
+			announce: 'http://bt1.archive.org:6969/announce',
+			'announce-list': [
+				[ 'http://bt1.archive.org:6969/announce' ],
+				[ 'http://bt2.archive.org:6969/announce' ]
+			],
+			comment: 'This content hosted at the Internet Archive at http://archive.org/details/tristanandisolda16250gut\nFiles may have changed, which prevents torrents from downloading correctly or completely; please check for an updated torrent at http://archive.org/download/tristanandisolda16250gut/tristanandisolda16250gut_archive.torrent\nNote: retrieval usually requires a client that supports webseeding (GetRight style).\nNote: many Internet Archive torrents contain a \'pad file\' directory. This directory and the files within it may be erased once retrieval completes.\nNote: the file tristanandisolda16250gut_meta.xml contains metadata about this torrent\'s contents.',
+			'created by': 'ia_make_torrent',
+			'creation date': 1417621541,
+			info: {
+				collections: [ 'org.archive.tristanandisolda16250gut' ],
+				name: 'tristanandisolda16250gut',
+				'piece length': 524288,
+				pieces: '\u0019�\u001a4�\b�������/�������\u00119�W򰫊���1Uc��\u0014���)�����U�xY�2�PD�wy\u001a�Fi\t�S�\f����q0\u0001�8��\bR\b�Ƨ0P��hŢ\be��q\'K\u0015'
+			},
+			locale: 'en',
+			title: 'tristanandisolda16250gut',
+			'url-list': [
+				'http://archive.org/download/',
+				'http://ia600600.us.archive.org/9/items/',
+				'http://ia700600.us.archive.org/9/items/'
+			]
+		};
 		path = appConfig.download_path + decodedTorrentFile.title;
 	});
 
 	after(function() {
-		deleteFolderRecursive(path);
-	})
-	
-	describe('#pieceInfo()', function(){
-		it('should call initPieceInfo() when it is the first contact to the torrent', function() {
-			assert.strictEqual(piece.downloaded, 0, "First contact to torrent: file should not have been downloaded");
-			assert.strictEqual(piece.uploaded, 0, "Uploading not implemented");
-			assert.strictEqual(piece.left, 2153880, "First contact to torrent: everything has yet to be downloaded");
-			assert.strictEqual(fs.existsSync(path), true, "Should result in creating a specific download folder");
-		})
+		fs_extra.removeSync(path);
+	});
 
-		it('should create a folder for the new torrent file', function() {
-			assert.strictEqual(fs.existsSync(path), true, "Should result in creating a specific download folder");
-		})
-
-		it('should return the current state when it is not the first contact to the torrent', function() {
-			assert.strictEqual(piece.downloaded, 1, "First contact to torrent: file should not have been downloaded");
-			assert.strictEqual(piece.uploaded, 0, "Uploading not implemented");
-			assert.strictEqual(piece.left, 99, "First contact to torrent: everything has yet to be downloaded");
-		})
-	})
+	describe('#initPieceInfo()', function() {
+		it ('should throw an error', function () {
+			expect(function() {new PieceInfo(decodedTorrentFile);}).to.throw('Torrent not properly formatted');
+		});
+	});
 });
 
 

@@ -3,10 +3,11 @@ var fs = require('fs'),
 	assert = chai.assert,
 	expect = chai.expect,
 	fs_extra = require('fs-extra'),
+	path  = require('path'),
 	request = require('request'),
 	appConfig = require('../config'),
 	PieceInfo = require('../lib/pieceInfo'),
-	decodedTorrentFile, piece, path, err;
+	decodedTorrentFile, piece, path_to_clear, err;
 
 decodedTorrentFile = { 
 	announce: 'http://bt1.archive.org:6969/announce',
@@ -180,9 +181,9 @@ decodedTorrentFile = {
 
 describe('pieceInfo', function(){
 	before (function() {
-		path = appConfig.download_path + decodedTorrentFile.title;
-		if (fs.existsSync(path)) {
-			fs_extra.removeSync(path);
+		path_to_clear = path.join(appConfig.download_path, decodedTorrentFile.title);
+		if (fs.existsSync(path_to_clear)) {
+			fs_extra.removeSync(path_to_clear);
 		}
 	});
 
@@ -191,7 +192,7 @@ describe('pieceInfo', function(){
 	});
 
 	after(function() {
-		fs_extra.removeSync(path);
+		fs_extra.removeSync(path_to_clear);
 	});
 	
 	describe('#pieceInfo()', function(){
@@ -239,11 +240,11 @@ describe('initPieceInfo - error', function() {
 				'http://ia700600.us.archive.org/9/items/'
 			]
 		};
-		path = appConfig.download_path + decodedTorrentFile.title;
+		path_to_clear = path.join(appConfig.download_path, decodedTorrentFile.title);
 	});
 
 	after(function() {
-		fs_extra.removeSync(path);
+		fs_extra.removeSync(path_to_clear);
 	});
 
 	describe('#initPieceInfo()', function() {

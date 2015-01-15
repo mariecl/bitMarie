@@ -1,9 +1,0 @@
-/announce?info_hash=S%aa%90%5eK%f7%89d%22%01%0a%c2i%d7Yoz%24%0cg&peer_id=-UM1860-A%8e%3a%85%887%7f%afs%f8%60%da&port=21011&uploaded=0&downloaded=0&left=2153880&corrupt=0&key=A7E4B7C8&event=started&numwant=200&compact=1&no_peer_id=1&ipv6=fe80%3a%3abae8%3a56ff%3afe1d%3affbe
-
-- DECODED BODY -
-{ complete: 0,
-  downloaded: 0,
-  incomplete: 2,
-  interval: 1838,
-  'min interval': 919,
-  peers: '����\u001a�����R\u0013' }

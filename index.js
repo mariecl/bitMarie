@@ -13,7 +13,9 @@ var config = require('./config'),
 command_arguments = process.argv.slice(2);
 switch (command_arguments[0]) {
 	case 'download':
-		downloader(command_arguments[1]);
+		downloader(command_arguments[1], function (error, data) {
+			console.log(error, data);
+		});
 		//torrentObject.on('end', function() {return console.log("ok")});
 		break;
 	case 'help':

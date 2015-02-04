@@ -16,7 +16,7 @@ var utils = {
 	/*
 	* Returns a urlencoded 20-byte SHA1 hash of the given value.
 	*/
-	computeURLEncodedHash = function (data) {
+	computeURLEncodedHash: function (data) {
 		var hash = sha1hex(data);
 		var info_hash = "";
 

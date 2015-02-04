@@ -1,3 +1,5 @@
+var crypto = require('crypto');
+
 var utils = {
 	/*
 	* Returns a 20-byte SHA1 hash of the input value as a buffer
@@ -17,7 +19,7 @@ var utils = {
 	* Returns a urlencoded 20-byte SHA1 hash of the given value.
 	*/
 	computeURLEncodedHash: function (data) {
-		var hash = sha1hex(data);
+		var hash = utils.sha1hex(data);
 		var info_hash = "";
 
 		for (var i = 0; i < hash.length; i += 2) {

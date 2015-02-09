@@ -21,7 +21,7 @@ switch (command_arguments[0]) {
 	case 'help':
 	default:
 		console.log("Enter download and a link or path to the torrent file to start downloading\n");
-		console.log("Example: node bitMarie download https://archive.org/download/tristanandisolda16250gut/tristanandisolda16250gut_archive.torrent\n");
-		console.log("Example: node bitMarie download ./tristanandisolda16250gut_archive.torrent");
+		console.log("Example: node index.js download https://archive.org/download/tristanandisolda16250gut/tristanandisolda16250gut_archive.torrent\n");
+		console.log("Example: node index.js download ./tristanandisolda16250gut_archive.torrent");
 		break;	
 }

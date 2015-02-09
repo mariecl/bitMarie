@@ -2,7 +2,7 @@ var assert = require('chai').assert,
 	downloader = require('../lib/downloader');
 
 describe('downloader', function () {
-	it.only ('#downloadFromURL', function () {
+	it ('#downloadFromURL', function () {
 		var wasRun = false;
 		
 		// overwrite downloadFromURL to make sure the function was called

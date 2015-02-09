@@ -4,6 +4,7 @@ var fs = require('fs'),
 	expect = chai.expect,
 	fs_extra = require('fs-extra'),
 	path  = require('path'),
+	sinon = require('sinon'),
 	appConfig = require('../config'),
 	FileWriter = require('../lib/fileWriter'),
 	fileTree, fw1, fw2, fw3, fw4, piece, callback;
@@ -98,5 +99,22 @@ describe('fileWriter', function (){
 			});
 		});
 	});
+
+	describe('#fileWriter.handle_piece()', function () {
+		it('should throw an error if the list of affected pieces is empty', function () {
+			fw2.handle_piece(function (err) {
+				expect(err).to.exist
+				.and.be.instanceof(Error)
+				.and.have.property('message', 'No file to write to');
+			});
+		});
+
+		it('should trigger write_to_file', function () {
+			var spy = sinon.spy(FileWriter.prototype, 'write_to_file');
+			fw1.handle_piece(callback);
+			assert(spy.called, 'it should call fileWriter.write_to_file');
+			assert.equal(spy.callCount, 3, 'it should need to write to 3 different files')
+		});
+	})
 });
 

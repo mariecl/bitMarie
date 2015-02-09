@@ -34,39 +34,40 @@ describe('fileWriter', function (){
 	    fw1 = new FileWriter (fileTree, '/x00/x00', 0, 524288, callback);
 		fw2 = new FileWriter (fileTree, '/x00/x00', 1, 524288, callback);
 		fw3 = new FileWriter (fileTree, '/x00/x00', 2, 524288, callback);
+		fw4 = new FileWriter(fileTree, '/x00/x00', 18, 50000, callback);
 	});
 
-	describe('#fileWriter.seek_absolute_start_index()', function () {
+	describe('#fileWriter.seek_absolute_start_byte_index()', function () {
 		it('should return a number', function () {
-			assert.isDefined(fw1.seek_absolute_start_index(), "should return true")
-			assert.isNumber(fw1.seek_absolute_start_index(), "should return true")
-			assert.isDefined(fw2.seek_absolute_start_index(), "should return true")
-			assert.isNumber(fw2.seek_absolute_start_index(), "should return true")
-			assert.isDefined(fw3.seek_absolute_start_index(), "should return true")
-			assert.isNumber(fw3.seek_absolute_start_index(), "should return true")
+			assert.isDefined(fw1.seek_absolute_start_byte_index(), "should return true")
+			assert.isNumber(fw1.seek_absolute_start_byte_index(), "should return true")
+			assert.isDefined(fw2.seek_absolute_start_byte_index(), "should return true")
+			assert.isNumber(fw2.seek_absolute_start_byte_index(), "should return true")
+			assert.isDefined(fw3.seek_absolute_start_byte_index(), "should return true")
+			assert.isNumber(fw3.seek_absolute_start_byte_index(), "should return true")
 		});
 
 		it('should be computed properly', function() {
-			assert.strictEqual(fw1.seek_absolute_start_index(), 0, "should return 0");
-			assert.strictEqual(fw2.seek_absolute_start_index(), 524288, "should return 524288");
-			assert.strictEqual(fw3.seek_absolute_start_index(), 1048576, "should return 1048576");			
+			assert.strictEqual(fw1.seek_absolute_start_byte_index(), 0, "should return 0");
+			assert.strictEqual(fw2.seek_absolute_start_byte_index(), 524288, "should return 524288");
+			assert.strictEqual(fw3.seek_absolute_start_byte_index(), 1048576, "should return 1048576");			
 		})
 	});
 
-	describe('#fileWriter.seek_absolute_end_index()', function () {
+	describe('#fileWriter.seek_absolute_end_byte_index()', function () {
 		it('should return a number', function () {
-			assert.isDefined(fw1.seek_absolute_end_index(), "should return true")
-			assert.isNumber(fw1.seek_absolute_end_index(), "should return true")
-			assert.isDefined(fw2.seek_absolute_end_index(), "should return true")
-			assert.isNumber(fw2.seek_absolute_end_index(), "should return true")
-			assert.isDefined(fw3.seek_absolute_end_index(), "should return true")
-			assert.isNumber(fw3.seek_absolute_end_index(), "should return true")
+			assert.isDefined(fw1.seek_absolute_end_byte_index(), "fw1: should return true")
+			assert.isNumber(fw1.seek_absolute_end_byte_index(), "fw1: should return true")
+			assert.isDefined(fw2.seek_absolute_end_byte_index(), "fw2: should return true")
+			assert.isNumber(fw2.seek_absolute_end_byte_index(), "fw2: should return true")
+			assert.isDefined(fw3.seek_absolute_end_byte_index(), "fw3: should return true")
+			assert.isNumber(fw3.seek_absolute_end_byte_index(), "fw3: should return true")
 		});
 
 		it('should be computed properly', function() {
-			assert.strictEqual(fw1.seek_absolute_end_index(), 524288, "should return 524288");
-			assert.strictEqual(fw2.seek_absolute_end_index(), 1048576, "should return 1048576");
-			assert.strictEqual(fw3.seek_absolute_end_index(), 1572864, "should return 1572864");			
+			assert.strictEqual(fw1.seek_absolute_end_byte_index(), 524288, "fw1: should return 524288");
+			assert.strictEqual(fw2.seek_absolute_end_byte_index(), 1048576, "fw2: should return 1048576");
+			assert.strictEqual(fw3.seek_absolute_end_byte_index(), 1572864, "fw3: should return 1572864");			
 		})
 	});
 
@@ -80,9 +81,8 @@ describe('fileWriter', function (){
 		});
 
 		it('should be computed properly', function() {
-			//fw4 = new FileWriter(fileTree, '/x00/x00', 18, 50000, callback);
-			assert.deepEqual(fw1.get_affected_files_indices(0, 524288, callback), [0, 1, 2], "should return [0, 1, 2]");
-			//assert.deepEqual(fw4.get_affected_files_indices(850000, 900000, callback), [1], "should return [1]");			
+			assert.deepEqual(fw1.get_affected_files_indices(0, 524288, callback), [0, 1, 2], "fw1: should return [0, 1, 2]");
+			assert.deepEqual(fw4.get_affected_files_indices(850000, 900000, callback), [2], "fw4: should return [2]");			
 		})
 
 		it('should throw an error if the given absolute index is out of bounds', function () {

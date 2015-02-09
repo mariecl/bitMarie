@@ -179,35 +179,35 @@ decodedTorrentFile = {
 	]
 };
 
-describe('pieceInfo', function(){
-	before (function() {
-		path_to_clear = path.join(appConfig.download_path, decodedTorrentFile.title);
+describe('pieceInfo', function (){
+	before (function () {
+		path_to_clear = path.join(appConfig.download_path.toString(), decodedTorrentFile.info.name.toString());
 		if (fs.existsSync(path_to_clear)) {
 			fs_extra.removeSync(path_to_clear);
 		}
 	});
 
-	beforeEach(function(){
+	beforeEach(function (){
 		piece = new PieceInfo (decodedTorrentFile);
 	});
 
-	after(function() {
+	after(function () {
 		fs_extra.removeSync(path_to_clear);
 	});
 	
-	describe('#pieceInfo()', function(){
-		it('should call initPieceInfo() when it is the first contact to the torrent', function() {
+	describe('#pieceInfo()', function (){
+		it('should call init_state() when it is the first contact to the torrent', function () {
 			assert.strictEqual(piece.state.downloaded, 0, "First contact to torrent: file should not have been downloaded");
 			assert.strictEqual(piece.state.uploaded, 0, "Uploading not implemented");
 			assert.strictEqual(piece.state.left, 2153880, "First contact to torrent: everything has yet to be downloaded");
 			assert.strictEqual(fs.existsSync(piece.path), true, "Should result in creating a specific download folder");
 		});
 
-		it('should create a folder for the new torrent file', function() {
+		it('should create a folder for the new torrent file', function () {
 			assert.strictEqual(fs.existsSync(piece.path), true, "Should result in creating a specific download folder");
 		});
 
-		it('should return the current state when it is not the first contact to the torrent', function() {
+		it('should return the current state when it is not the first contact to the torrent', function () {
 			assert.strictEqual(piece.state.downloaded, 1, "First contact to torrent: file should not have been downloaded");
 			assert.strictEqual(piece.state.uploaded, 0, "Uploading not implemented");
 			assert.strictEqual(piece.state.left, 99, "First contact to torrent: everything has yet to be downloaded");
@@ -215,7 +215,7 @@ describe('pieceInfo', function(){
 	});
 });
 
-describe('initPieceInfo - error', function() {
+describe('init_state - error', function() {
 	before(function () {
 		decodedTorrentFile = { 
 			announce: 'http://bt1.archive.org:6969/announce',
@@ -240,17 +240,27 @@ describe('initPieceInfo - error', function() {
 				'http://ia700600.us.archive.org/9/items/'
 			]
 		};
-		path_to_clear = path.join(appConfig.download_path, decodedTorrentFile.title);
+		path_to_clear = path.join(appConfig.download_path.toString(), decodedTorrentFile.info.name.toString());
 	});
 
-	after(function() {
+	after(function () {
 		fs_extra.removeSync(path_to_clear);
 	});
 
-	describe('#initPieceInfo()', function() {
-		it ('should throw an error', function () {
-			expect(function() {new PieceInfo(decodedTorrentFile);}).to.throw('Torrent not properly formatted');
-		});
+/*	describe('#init_state()', function () {
+		
+	});*/
+
+	describe('#init_piecesTable', function () {
+
+	});
+
+	describe('#init_bitfield', function () {
+
+	});
+
+	describe('#init_transitfield', function () {
+
 	});
 });
 

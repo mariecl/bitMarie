@@ -9,7 +9,7 @@ var fs = require('fs'),
 	FileWriter = require('../lib/fileWriter'),
 	fileTree, fw1, fw2, fw3, fw4, piece, callback;
 
-describe('fileWriter', function (){
+describe.only('fileWriter', function (){
 	beforeEach (function () {
 		callback = function (err) {return console.log(err);};
 		fileTree = [
@@ -38,46 +38,52 @@ describe('fileWriter', function (){
 		fw4 = new FileWriter(fileTree, '/x00/x00', 18, 50000, callback);
 	});
 
-	describe('#fileWriter.seek_absolute_start_byte_index()', function () {
+	describe('#fileWriter.prototype.seek_absolute_start_byte_index()', function () {
 		it('should return a number', function () {
-			assert.isDefined(fw1.seek_absolute_start_byte_index(), "should return true")
-			assert.isNumber(fw1.seek_absolute_start_byte_index(), "should return true")
-			assert.isDefined(fw2.seek_absolute_start_byte_index(), "should return true")
-			assert.isNumber(fw2.seek_absolute_start_byte_index(), "should return true")
-			assert.isDefined(fw3.seek_absolute_start_byte_index(), "should return true")
-			assert.isNumber(fw3.seek_absolute_start_byte_index(), "should return true")
+			assert.isDefined(fw1.seek_absolute_start_byte_index(), "should return true");
+			assert.isNumber(fw1.seek_absolute_start_byte_index(), "should return true");
+			assert.isDefined(fw2.seek_absolute_start_byte_index(), "should return true");
+			assert.isNumber(fw2.seek_absolute_start_byte_index(), "should return true");
+			assert.isDefined(fw3.seek_absolute_start_byte_index(), "should return true");
+			assert.isNumber(fw3.seek_absolute_start_byte_index(), "should return true");
+			assert.isDefined(fw4.seek_absolute_start_byte_index(), "should return true");
+			assert.isNumber(fw4.seek_absolute_start_byte_index(), "should return true");
 		});
 
 		it('should be computed properly', function() {
 			assert.strictEqual(fw1.seek_absolute_start_byte_index(), 0, "should return 0");
-			assert.strictEqual(fw2.seek_absolute_start_byte_index(), 524288, "should return 524288");
-			assert.strictEqual(fw3.seek_absolute_start_byte_index(), 1048576, "should return 1048576");			
+			assert.strictEqual(fw2.seek_absolute_start_byte_index(), 524288, "should return 524 288");
+			assert.strictEqual(fw3.seek_absolute_start_byte_index(), 1048576, "should return 1 048 576");
+			assert.strictEqual(fw4.seek_absolute_start_byte_index(), 900000, "should return 900 000");	
 		})
 	});
 
-	describe('#fileWriter.seek_absolute_end_byte_index()', function () {
+	describe('#fileWriter.prototype.seek_absolute_end_byte_index()', function () {
 		it('should return a number', function () {
-			assert.isDefined(fw1.seek_absolute_end_byte_index(), "fw1: should return true")
-			assert.isNumber(fw1.seek_absolute_end_byte_index(), "fw1: should return true")
-			assert.isDefined(fw2.seek_absolute_end_byte_index(), "fw2: should return true")
-			assert.isNumber(fw2.seek_absolute_end_byte_index(), "fw2: should return true")
-			assert.isDefined(fw3.seek_absolute_end_byte_index(), "fw3: should return true")
-			assert.isNumber(fw3.seek_absolute_end_byte_index(), "fw3: should return true")
+			assert.isDefined(fw1.seek_absolute_end_byte_index(), "fw1: should return true");
+			assert.isNumber(fw1.seek_absolute_end_byte_index(), "fw1: should return true");
+			assert.isDefined(fw2.seek_absolute_end_byte_index(), "fw2: should return true");
+			assert.isNumber(fw2.seek_absolute_end_byte_index(), "fw2: should return true");
+			assert.isDefined(fw3.seek_absolute_end_byte_index(), "fw3: should return true");
+			assert.isNumber(fw3.seek_absolute_end_byte_index(), "fw3: should return true");
+			assert.isDefined(fw4.seek_absolute_end_byte_index(), "fw4: should return true");
+			assert.isNumber(fw4.seek_absolute_end_byte_index(), "fw4: should return true");
 		});
 
 		it('should be computed properly', function() {
 			assert.strictEqual(fw1.seek_absolute_end_byte_index(), 524288, "fw1: should return 524288");
 			assert.strictEqual(fw2.seek_absolute_end_byte_index(), 1048576, "fw2: should return 1048576");
-			assert.strictEqual(fw3.seek_absolute_end_byte_index(), 1572864, "fw3: should return 1572864");			
+			assert.strictEqual(fw3.seek_absolute_end_byte_index(), 1572864, "fw3: should return 1572864");
+			assert.strictEqual(fw4.seek_absolute_end_byte_index(), 950000, "should return 950 000");			
 		})
 	});
 
-	describe('#fileWriter.get_affected_files_indices()', function () {
+	describe('#fileWriter.prototype.get_affected_files_indices()', function () {
 		it('should return an array', function () {
-			assert.isDefined(fw1.get_affected_files_indices(0, 524288, callback), "fw1: should return true")
-			assert.isArray(fw1.get_affected_files_indices(0, 524288, callback), "fw1: should return true")
-			assert.isDefined(fw4.get_affected_files_indices(524288, 1048576, callback), "fw2: should return true")
-			assert.isArray(fw4.get_affected_files_indices(524288, 1048576, callback), "fw2: should return true")
+			assert.isDefined(fw1.get_affected_files_indices(0, 524288, callback), "fw1: should return true");
+			assert.isArray(fw1.get_affected_files_indices(0, 524288, callback), "fw1: should return true");
+			assert.isDefined(fw4.get_affected_files_indices(524288, 1048576, callback), "fw2: should return true");
+			assert.isArray(fw4.get_affected_files_indices(524288, 1048576, callback), "fw2: should return true");
 
 		});
 
@@ -100,7 +106,7 @@ describe('fileWriter', function (){
 		});
 	});
 
-	describe('#fileWriter.handle_piece()', function () {
+	describe('#fileWriter.prototype.handle_piece()', function () {
 		it('should throw an error if the list of affected pieces is empty', function () {
 			fw2.handle_piece(function (err) {
 				expect(err).to.exist
@@ -113,7 +119,27 @@ describe('fileWriter', function (){
 			var spy = sinon.spy(FileWriter.prototype, 'write_to_file');
 			fw1.handle_piece(callback);
 			assert(spy.called, 'it should call fileWriter.write_to_file');
-			assert.equal(spy.callCount, 3, 'it should need to write to 3 different files')
+			assert.equal(spy.callCount, 3, 'it should write to 3 different files')
+		});
+	});
+
+	describe('#fileWriter.prototype.seek_relative_start_byte_index', function () {
+		it('should return a number', function () {
+			assert.isDefined(fw1.seek_relative_start_byte_index(0, 0, callback), 'fw1: should return true');
+			assert.isNumber(fw1.seek_relative_start_byte_index(0, 0, callback), 'fw1: should return true');
+			assert.isDefined(fw1.seek_relative_start_byte_index(0, 1, callback), 'fw1: should return true');
+			assert.isNumber(fw1.seek_relative_start_byte_index(0, 1, callback), 'fw1: should return true');
+			assert.isDefined(fw1.seek_relative_start_byte_index(0, 2, callback), 'fw1: should return true');
+			assert.isNumber(fw1.seek_relative_start_byte_index(0, 2, callback), 'fw1: should return true');
+			assert.isDefined(fw4.seek_relative_start_byte_index(900000, 2, callback), 'fw4: should return true');
+			assert.isNumber(fw4.seek_relative_start_byte_index(900000, 2, callback), 'fw4: should return true');
+		});
+
+		it('should be computed properly', function () {
+			assert.strictEqual(fw1.seek_relative_start_byte_index(0, 0, callback), 0, 'fw1: should return 0');
+			assert.strictEqual(fw1.seek_relative_start_byte_index(0, 1, callback), 0, 'fw1: should return 0');
+			assert.strictEqual(fw1.seek_relative_start_byte_index(0, 2, callback), 0, 'fw1: should return 0');
+			assert.strictEqual(fw4.seek_relative_start_byte_index(900000, 2, callback), 787345, 'fw4: should return true');
 		});
 	})
 });

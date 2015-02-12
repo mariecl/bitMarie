@@ -1,7 +1,11 @@
 'use strict';
 
-var config = require('./config'),
-	downloader = require('./lib/downloader'),
+var bencode = require('bencode'),
+	config = require('./config'),
+	torrentFileDownloader = require('./lib/torrentFileDownloader'),
+	TorrentSession = require('./lib/torrentSession'),
+	PieceInfo = require('./lib/pieceInfo'),
+	trackerConnection = require('./lib/trackerConnection'),
 	command_arguments;
 
 /*
@@ -13,10 +17,25 @@ var config = require('./config'),
 command_arguments = process.argv.slice(2);
 switch (command_arguments[0]) {
 	case 'download':
-		downloader(command_arguments[1], function (error, data) {
-			console.log(error, data);
+		var fileLocation = command_arguments[1];
+
+		try {
+			var getFile = torrentFileDownloader(fileLocation);
+		} catch (error) {
+			console.log(error);
+			console.log(error.stack);
+		}
+
+		getFile(fileLocation, function (err, body) {
+			var piece = new PieceInfo(bencode.decode(body));
+			trackerConnection(piece, function (err, body) {
+				var torrentSession = new TorrentSession(bencode.decode(body), piece, function () {});
+				var peersList = torrentSession.peers.forEach(function (peer) {
+					peer.connect(function(){});
+				})
+			});
 		});
-		//torrentObject.on('end', function() {return console.log("ok")});
+
 		break;
 	case 'help':
 	default:

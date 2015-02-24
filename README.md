@@ -3,7 +3,7 @@ bitMarie
 
 bitMarie is a bitTorrent client written in Node.js.
 It is still a work in progress.
-Currently, the bitMarie can contact a tracker and open a connection with peers, exchange messages with peers, request and download pieces from the file. The next step will be to write the downloaded pieces to disk.
+Currently, the bitMarie can contact a tracker and open a connection with peers, exchange messages with peers, request and download pieces from the file. The next step is to write the downloaded pieces to disk.
 
 ###1. How do I get set up?###
 * Make sure Node.js 0.10.x is installed and available with the node command
@@ -14,6 +14,7 @@ Currently, the bitMarie can contact a tracker and open a connection with peers, 
 npm install
 ```
 
+###2. How do I use the application?###
 * Download a torrent file and move it in the bitMarie folder
 
 * Launch the application by running the following command from the command line, replacing './archlinux.torrent' by the path to your torrent file
@@ -21,15 +22,6 @@ npm install
 ```bash
 node index.js download ./archlinux.torrent
 ```
-
-* Launch your browser and go to http://localhost:8000/
-
-###2. How do I use the application?###
-* Go to [http://localhost:8000/](http://localhost:8000/) to authenticate yourself, and copy the access token which will be displayed at the end of the process.
-* To get the list of all your calendars, go to _http://localhost:8000/calendars?accessToken=&lt;accessToken>_ replacing _&lt;accessToken>_ with the access token you previously copied.
-* To get the list of the events in one of your calendars, go to _http://localhost:8000/calendars/&lt;calendarID>/events?accessToken=&lt;accessToken>_ and replace:
-     -  &lt;calendarID> with a calendarID from the list of your calendars
-     - &lt;accessToken> with the access token you previously copied
 
 ###3. How do I run the tests?###
 To launch the unit tests, run:
@@ -50,6 +42,8 @@ This project depends on the following Node.js libraries:
 
 * mocha: for running the unit tests
 
+* sinon: for mocking in unit tests
+
 
 All these dependencies are listed in the package.json file and automatically installed when running 
 
@@ -69,11 +63,13 @@ npm install
 * Declare constants as constants in a separate file
 * Write generic functions to send messages
 * Clarify naming convention between file, piece, and blocks
-* Update tests for pieceInfo
+* Implement endgame startegy
+* ~~ Update tests for pieceInfo ~~
 * Write tests for all the modules
-* Build an interface for the client so that using it from the command line is not necessary anymore
-* Enable multiple torrents downloading
+* Build an interface for the client so that using it from the command line is less necessary
+* Enable downloading of multiple torrents
 * Handle reserved bits for bitTorrent protocol
+* Check for remaining space on disk before allocating bits to downloading files
 
 
 ###7. Who do I get in touch with?###

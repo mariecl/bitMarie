@@ -63,10 +63,11 @@ npm install
 * Declare constants as constants in a separate file
 * Write generic functions to send messages
 * Clarify naming convention between file, piece, and blocks
+* Implement endgame startegy
 * ~~ Update tests for pieceInfo ~~
 * Write tests for all the modules
-* Build an interface for the client so that using it from the command line is not necessary anymore
-* Enable multiple torrents downloading
+* Build an interface for the client so that using it from the command line is less necessary
+* Enable downloading of multiple torrents
 * Handle reserved bits for bitTorrent protocol
 * Check for remaining space on disk before allocating bits to downloading files
 
